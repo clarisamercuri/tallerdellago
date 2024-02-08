@@ -1,0 +1,414 @@
+ <style>
+ 
+.fc .fc-toolbar-title {
+  font-size: 1.5rem;
+};
+.fc .fc-button{
+    padding:0px;
+    font-size:0.75rem;
+}
+div.fc-view-harness.fc-view-harness-active {
+    height: 500px !important;
+}
+div.fc-bg-event.fc-event.fc-event-start.fc-event-end.fc-event-past, div.fc-bg-event.fc-event.fc-event-start.fc-event-end.fc-event-future{
+    font-size: 0.8rem;
+}
+
+.fc-col-header {
+  width:-webkit-fill-available !important;
+}
+
+.fc-toolbar-title {
+  font-size: medium !important;
+}
+
+.fc-scrollgrid-sync-table {
+  width:-webkit-fill-available !important;
+}
+
+div.fc-daygrid-body.fc-daygrid-body-unbalanced {
+    width:-webkit-fill-available !important;
+
+}
+
+</style>
+ <div class="container">
+ <div class="row">
+        <div class="col-md-12 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                
+       <div class="row">
+
+      <div class="col-md-4">
+        <div class="row">
+            <div class="col">
+            <h5>Datos principales</h5>
+            {{#each presupuestos}}
+            <h6>Nombre: <small>{{nombre}}</small></h6>
+            <h6>Teléfono: <small>{{telefono}}</small></h6>
+            <h6>Dominio: <small>{{dominio}}</small></h6>
+            <h6>Marca/Modelo: <small>{{marca}}/{{modelo}}</small></h6>
+            <h6>Color: <small>{{color}}</small></h6>
+            </div>
+            <div class="col">
+            <h5>Detalle del registro</h5>
+            <h6>Compañía: <small> {{#if particular}}
+              <td style="color:purple">Turno particular</td>
+              {{else }}
+               <td>{{compania}}</td>
+             {{/if}}</small></h6>
+             <h6>Siniestro: <small>{{siniestro}}</small></h6>
+            <h6>Ingreso: <small>{{fecha_ingreso}}</small></h6>
+            <h6>Turno: <small> {{#if turno}}
+              <td style="color:orange"> {{fecha_turno_i}} - {{fecha_turno_f}}  <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#asignarturnomodal"><i class="fas fa-calendar-day"></i></button> <button class="btn btn-danger btn-sm" id="eliminarturno" data-toggle="modal" data-target="#eliminarturnomodal"><i class="fa fa-trash"></i></button></td>
+              {{else }}
+               <td> Sin turno <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#asignarturnomodal"><i class="fas fa-calendar-day"></i></button></td>
+             {{/if}}
+           {{#if completa}}
+              <td style="color:limegreen"> {{estado}}</td>
+              {{else }}
+             {{/if}}</small></h6>
+            <h6>Estado: <small>{{estado}}</small></h6>
+            {{/each}}
+            </div>
+
+</div>
+      </div>
+   
+            <div class="col-md-4">
+              {{#each orden}}
+                                 <h5>Presupuestos <a class="btn btn-success btn-sm" href="/nuevopresupuestoclientemob/{{dominio}}" ><i class="fas fa-plus"></i></a></h5>
+                                 
+            
+                {{#if presupuesto_0}}
+                <div class="row" style="justify-content: flex-start;">
+                <div class='col-7'>{{presupuesto_0}}            
+                </div>  
+                <div class='col-5'>
+                  <a class="btn btn-danger btn-sm" href="/pdfpresupuestomob/{{dominio}}/{{presupuesto_0}}"><i class="far fa-file-pdf"></i></a> 
+                  <a class="btn btn-primary btn-sm" href="/editarpresupuestomob/{{dominio}}/{{presupuesto_0}}/0"><i class="fas fa-edit"></i></a>
+                  <a class="btn btn-danger btn-sm" href="/eliminarpresupuestomob/{{dominio}}/presupuesto_0/{{presupuesto_0}}"><i class="fa fa-trash"></i></a>
+                </div>
+                <div class="col">
+                 {{#if observacion_0}}
+                  <p style="font-size: x-small"><b>Observación para el taller:</b> {{observacion_0}}</p>
+                  {{/if}}</div>
+                </div>
+                
+                {{/if}}
+                 {{#if presupuesto_A}}
+                 <div class="row" style="justify-content: flex-start;">
+                <div class='col-7'>{{presupuesto_A}}</div>  
+                <div class='col-5'>
+                  <a class="btn btn-danger btn-sm" href="/pdfpresupuestomob/{{dominio}}/{{presupuesto_A}}"><i class="far fa-file-pdf"></i></a>  
+                  <a class="btn btn-primary btn-sm" href="/editarpresupuestomob/{{dominio}}/{{presupuesto_A}}/A"><i class="fas fa-edit"></i></a>
+                  <a class="btn btn-danger btn-sm" href="/eliminarpresupuestomob/{{dominio}}/presupuesto_A/{{presupuesto_A}}"><i class="fa fa-trash"></i></a>
+                 </div>
+                                 <div class="col">
+                 {{#if observacion_A}}
+                  <p style="font-size: x-small"><b>Observación para el taller:</b> {{observacion_A}}</p>
+                  {{/if}}</div>
+                 </div>{{/if}} {{#if presupuesto_B}}
+                 <div class="row" style="justify-content: flex-start;">
+                <div class='col-7'>{{presupuesto_B}} </div> 
+                <div class='col-5'>
+                  <a class="btn btn-danger btn-sm" href="/pdfpresupuestomob/{{dominio}}/{{presupuesto_B}}"><i class="far fa-file-pdf"></i></a>  
+                  <a class="btn btn-primary btn-sm" href="/editarpresupuestomob/{{dominio}}/{{presupuesto_B}}/B"><i class="fas fa-edit"></i></a>                  
+                  <a class="btn btn-danger btn-sm" href="/eliminarpresupuestomob/{{dominio}}/presupuesto_B/{{presupuesto_B}}"><i class="fa fa-trash"></i></a>
+                 </div>
+                                 <div class="col">
+                 {{#if observacion_B}}
+                  <p style="font-size: x-small"><b>Observación para el taller:</b> {{observacion_B}}</p>
+                  {{/if}}</div>
+                 </div>{{/if}} {{#if presupuesto_C}}
+                  <div class="row" style="justify-content: flex-start;">
+                <div class='col-7'>{{presupuesto_C}} </div> 
+              
+                <div class='col-5'>
+                  <a class="btn btn-danger btn-sm" href="/pdfpresupuestomob/{{dominio}}/{{presupuesto_C}}"><i class="far fa-file-pdf"></i></a> 
+                  <a class="btn btn-primary btn-sm" href="/editarpresupuestomob/{{dominio}}/{{presupuesto_C}}/C"><i class="fas fa-edit"></i></a>                   
+                   <a class="btn btn-danger btn-sm" href="/eliminarpresupuestomob/{{dominio}}/presupuesto_C/{{presupuesto_C}}"><i class="fa fa-trash"></i></a>
+                </div>
+                                <div class="col">
+                 {{#if observacion_C}}
+                  <p style="font-size: x-small"><b>Observación para el taller:</b> {{observacion_C}}</p>
+                  {{/if}}</div>
+                </div>{{/if}} {{#if presupuesto_D}}
+                 <div class="row" style="justify-content: flex-start;">
+                <div class='col-7'>{{presupuesto_D}}</div>  
+                <div class='col-5'>
+                  <a class="btn btn-danger btn-sm" href="/pdfpresupuestomob/{{dominio}}/{{presupuesto_D}}"><i class="far fa-file-pdf"></i></a>  
+                  <a class="btn btn-primary btn-sm" href="/editarpresupuestomob/{{dominio}}/{{presupuesto_D}}/D"><i class="fas fa-edit"></i></a>                  
+                  <a class="btn btn-danger btn-sm" href="/eliminarpresupuestomob/{{dominio}}/presupuesto_D/{{presupuesto_D}}"><i class="fa fa-trash"></i></a>
+                </div>
+                                <div class="col">
+                 {{#if observacion_D}}
+                  <p style="font-size: x-small"><b>Observación para el taller:</b> {{observacion_D}}</p>
+                  {{/if}}</div>
+                </div> {{/if}} {{#if presupuesto_E}}
+                 <div class="row" style="justify-content: flex-start;">
+                <div class='col-7'>{{presupuesto_E}}</div>  
+                <div class='col-5'>
+                  <a class="btn btn-danger btn-sm" href="/pdfpresupuestomob/{{dominio}}/{{presupuesto_E}}"><i class="far fa-file-pdf"></i></a> 
+                  <a class="btn btn-primary btn-sm" href="/editarpresupuestomob/{{dominio}}/{{presupuesto_E}}/E"><i class="fas fa-edit"></i></a>                   
+                   <a class="btn btn-danger btn-sm" href="/eliminarpresupuestomob/{{dominio}}/presupuesto_E/{{presupuesto_E}}"><i class="fa fa-trash"></i></a>
+                 </div>
+                                 <div class="col">
+                 {{#if observacion_E}}
+                  <p style="font-size: x-small"><b>Observación para el taller:</b> {{observacion_E}}</p>
+                  {{/if}}</div>
+                 </div>{{/if}}
+                {{/each}}
+                
+</div>    
+<br/><br/>
+<div class="col-md-4">
+      
+                <h5>Órdenes de trabajo</h5>
+{{#each orden}}                 {{#if orden_0}}
+                <div class="row" style="justify-content: flex-start;">
+                <div class='col-8'>{{orden_0}}</div> <div class='col-4'><a class="btn btn-danger btn-sm" href="../pdf/ordenes/{{orden_0}}" download="{{orden_0}}"><i class="far fa-file-pdf"></i></a>  <a class="btn btn-danger btn-sm" href="/eliminarordentrabajo/{{dominio}}/orden_0/{{orden_0}}"><i class="fa fa-trash"></i></a>
+                </div></div>{{/if}}
+                                 {{#if orden_A}}
+                                                 <div class="row" style="justify-content: flex-start;">
+
+                <div class='col-8'>{{orden_A}}</div> <div class='col-4'><a class="btn btn-danger btn-sm" href="../pdf/ordenes/{{orden_A}}" download="{{orden_A}}"><i class="far fa-file-pdf"></i></a>  <a class="btn btn-danger btn-sm" href="/eliminarordentrabajo/{{dominio}}/orden_A"><i class="fa fa-trash"></i></a>
+                </div></div>{{/if}}                 {{#if orden_B}}
+                                <div class="row" style="justify-content: flex-start;">
+
+                <div class='col-8'>{{orden_B}}</div> <div class='col-4'><a class="btn btn-danger btn-sm" href="../pdf/ordenes/{{orden_B}}" download="{{orden_B}}"><i class="far fa-file-pdf"></i></a>  <a class="btn btn-danger btn-sm" href="/eliminarordentrabajo/{{dominio}}/orden_B"><i class="fa fa-trash"></i></a>
+                </div></div>{{/if}}                 {{#if orden_C}}
+                                <div class="row" style="justify-content: flex-start;">
+
+                <div class='col-8'>{{orden_C}}</div> <div class='col-4'><a class="btn btn-danger btn-sm" href="../pdf/ordenes/{{orden_C}}" download="{{orden_C}}"><i class="far fa-file-pdf"></i></a>  <a class="btn btn-danger btn-sm" href="/eliminarordentrabajo/{{dominio}}/orden_C"><i class="fa fa-trash"></i></a>
+                </div></div>{{/if}}                 {{#if orden_D}}
+                                <div class="row" style="justify-content: flex-start;">
+
+                <div class='col-8'>{{orden_D}}</div> <div class='col-4'><a class="btn btn-danger btn-sm" href="../pdf/ordenes/{{orden_D}}" download="{{orden_D}}"><i class="far fa-file-pdf"></i></a>  <a class="btn btn-danger btn-sm" href="/eliminarordentrabajo/{{dominio}}/orden_D"><i class="fa fa-trash"></i></a>
+                </div></div>{{/if}}                 {{#if orden_E}}
+                                <div class="row" style="justify-content: flex-start;">
+
+                <div class='col-8'>{{orden_E}}</div> <div class='col-4'><a class="btn btn-danger btn-sm" href="../pdf/ordenes/{{orden_E}}" download="{{orden_E}}"><i class="far fa-file-pdf"></i></a>  <a class="btn btn-danger btn-sm" href="/eliminarordentrabajo/{{dominio}}/orden_E"><i class="fa fa-trash"></i></a>
+                </div></div>{{/if}}
+                {{/each}}
+</div>    
+
+</div> <br/> {{#each presupuestos}}
+                  <form id="eliminarorden" method="post" action="/eliminarorden">
+                  <div class="form-group">
+        <button type="submit" class="btn btn-danger btn-block">Eliminar registro</button></div>
+       
+        <input style="display:none" id="eliminarorden_dominio" name="eliminarorden_dominio" value="{{dominio}}">
+        
+                            <div class="form-group"><a class="btn btn-secondary btn-block" href="/ordenes">
+                                Regresar al listado
+                            </a></div>
+        </form>
+      </div></div></div></div>
+       <div class="modal fade" id="ordenmodal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title" id="exampleModalLabel">Detalle de orden de trabajo</h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+     
+<embed id="pdforden" width="750" height="375" 
+ type="application/pdf">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="modal fade" id="presupuestomodal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      
+      <div class="modal-header">
+        <h6 class="modal-title" id="exampleModalLabel">Detalle de presupuesto</h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="bodypresupuesto">
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="asignarturnomodal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+                  <form id="nuevoturno" method="post" action="/nuevoturno">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Asignar ó modificar turno</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col">
+   <div class="form-group">
+<label for="fecha_nuevoturno">Fecha de turno:</label>
+                <input type="date" name="fecha_nuevoturno_i" id="fecha_nuevoturno_i" required class="form-control"  onchange="document.getElementById('fecha_nuevoturno_f').min = this.value;" placeholder="Fecha del turno" required>
+            </div>
+            </div>
+                    <input style="display:none" id="nuevoturno_dominio" name="nuevoturno_dominio" value="{{dominio}}">
+
+            <div class="col">
+               <div class="form-group">
+<label for="fecha_nuevoturno">Fecha de entrega:</label>
+                <input type="date" name="fecha_nuevoturno_f" id="fecha_nuevoturno_f" required class="form-control" placeholder="Fecha de entrega">
+ <div class="form-check form-check-inline">
+  <input class="form-check-input" type="checkbox" id="fecha_eneldia" name="fecha_eneldia" value="1" onclick="document.getElementById('fecha_nuevoturno_f').toggleAttribute('disabled');document.getElementById('fecha_nuevoturno_f').value='';document.getElementById('fecha_nuevoturno_f').placeholder='';">
+  <label class="form-check-label" for="particular" style="color: rgb(118,118,118);" >En el día</label>
+</div>
+            </div></div>
+</div>
+
+<div id="calendarioturno"></div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary" id="confirmarturno" disabled>Confirmar turno</button>
+      </div></form>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div class="modal fade" id="eliminarturnomodal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+                  <form id="eliminarturno" method="post" action="/eliminarturno">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Eliminar turno</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+<p>Está seguro de que desea eliminar el turno?</p>
+  <input style="display:none" id="eliminarturno_dominio" name="eliminarturno_dominio" value="{{dominio}}">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+      </div></form>
+    </div>
+  </div>
+</div>
+{{/each}}
+      <script>
+
+ document.addEventListener('DOMContentLoaded', async function() {
+var calendarEl = document.getElementById('calendarioturno');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          timeZone: 'UTC-3',
+          initialView: 'dayGridMonth',
+           headerToolbar: {
+      center: 'addEventButton'
+    },
+
+
+    customButtons: {
+      addEventButton: {
+        text: 'Cargar',
+        click: function() {
+              var turnoviejo = calendar.getEventById('nuevoturno_cliente_cal');
+            if (turnoviejo != null){
+              turnoviejo.remove();
+            }
+            var nuevafecha_i = $('#fecha_nuevoturno_i').val();
+            var nuevafechaturno_i = new Date(nuevafecha_i + 'T00:00:00');
+            var nuevafecha_f = $('#fecha_nuevoturno_f').val();
+            var nuevomes_ = String(Number(String($('#fecha_nuevoturno_f').val()).split('-')[2])+1).padStart(2,'0');
+            var nuevafecha_f_ = String($('#fecha_nuevoturno_f').val()).split('-')[0] + '-' + String($('#fecha_nuevoturno_f').val()).split('-')[1] + '-' + nuevomes_
+            var nuevafechaturno_f = new Date(nuevafecha_f_ + 'T00:00:00');             
+            if (!isNaN(nuevafechaturno_i.valueOf())) { 
+            console.log(nuevafechaturno_f)
+            console.log(nuevafecha_f_)
+            console.log(nuevafechaturno_i)
+            calendar.addEvent({
+              start: nuevafechaturno_i,
+              end: nuevafechaturno_f,
+              color: '#17a2b8',
+              allDay:true,
+              id: 'nuevoturno_cliente_cal'
+              
+            });    
+            $('#confirmarturno').removeAttr('disabled');
+
+            $('#fecha_nuevoturno_f').val = nuevafechaturno_f;
+
+            calendar.gotoDate(nuevafechaturno_i)
+         
+                }  else {
+            alert('Hubo un problema, intente nuevamente.');
+            $('#nuevoturnoModal').modal('hide'); 
+          }
+          
+          
+          
+}
+        }
+      },
+      
+    })
+
+calendar.addEventSource('/feriados.json');
+
+        calendar.setOption('locale', 'es-us');
+        themeSystem: 'bootstrap';
+
+        calendar.render();
+      
+
+ });
+
+
+function subirform(string, dominio){
+  if (string == 'actualizar'){
+    document.getElementById('modificarturno').setAttribute('action','/actualizarturno/'+dominio)
+    document.getElementById('modificarturno').setAttribute('method','POST')
+    document.getElementById('modificarturno').submit();
+  }
+   else if (string == 'eliminar'){
+    document.getElementById('modificarturno').setAttribute('action','/eliminarturno/'+dominio)
+    document.getElementById('modificarturno').setAttribute('method','POST')
+    document.getElementById('modificarturno').submit();
+  }
+     else if (string == 'nuevaorden'){
+    document.getElementById('nuevaorden').setAttribute('action','/nuevaordenturno/'+dominio)
+    document.getElementById('nuevaorden').setAttribute('method','POST')
+    document.getElementById('nuevaorden').submit();
+  }
+}
+
+
+ function verpdfpresupuesto(t,d){
+ let url = '/pdfpresupuesto/'+d+'/'+t;
+
+    var embedpdf = '<embed width="750" id="embedpresupuesto" height="375" src="'+url+'" type="application/pdf">'
+    document.getElementById('bodypresupuesto').insertAdjacentHTML("beforeend",embedpdf);
+      }
+    function verpdforden(x){
+    document.getElementById('pdforden').setAttribute('src', '../pdf/ordenes/'+x)
+  }
+      </script>

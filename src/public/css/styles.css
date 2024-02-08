@@ -1,0 +1,90 @@
+body {
+    background: #f5f6fa;
+font-family: 'Oswald', sans-serif;
+
+}
+
+.index {
+    width: 100vw;
+    height: 100vh;
+}
+
+.navbar {
+    background: black !important;
+}
+
+.nav-link {
+    color: #fff !important;
+}
+
+.masthead {
+    color: white;
+    min-height: 30rem;
+    width: 100%;
+    height: 100%;
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+    background: url('/img/background.jpg');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.masthead h1 {
+    font-size: 4rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  a#valores-tab, a#piezas-tab, a#cuenta-tab {
+    color: black !important
+  }
+  @media (min-width: 992px) {
+    .masthead {
+      height: 100vh;
+    }
+    .masthead h1 {
+      font-size: 5.5rem;
+    }
+  }
+
+#tablapres_paginate {
+  text-align: center
+}
+
+#tablapres_previous, #tablapres_next {
+  padding: 10px;
+}
+
+a:hover {
+  cursor: pointer
+}
+
+select, [type=search] {
+  border-radius: .25rem;
+  border: 1px solid #ced4da;
+}
+
+@media (min-width: 769px) {
+  #tablapres_mob, #tablapres_mob_wrapper {
+    display: none;
+  };
+
+}
+
+
+@media (max-width: 768px) {
+  #tablapres, #detallepresupuesto, #tablapres_wrapper {
+    display: none;
+  };
+  * {
+    font-size: 0.75 rem !important;
+};
+#badges {
+  font-size: 0.75 rem !important;
+}
+}
+
+.paginate_button {
+padding: 10px;
+}

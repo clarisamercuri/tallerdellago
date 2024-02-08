@@ -1,0 +1,22 @@
+{
+    "name": "Taller Del Lago",
+    "description": "Sistema de gestión de talleres automotores.",
+    "icons": [
+      {
+        "src": "/splash-screen.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      },
+      {
+        "src": "/logo_dellago.png",
+        "sizes": "196x196",
+        "type": "image/png",
+        "purpose": "any maskable"
+      }
+    ],
+    "start_url": "/",
+    "display": "fullscreen",
+    "theme_color": "black",
+    "background_color": "black",
+    "prefer_related_applications": true
+  }

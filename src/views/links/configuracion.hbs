@@ -1,0 +1,198 @@
+
+<div class="container-fluid">
+    <br/>
+    <h2>Configuración general</h2>
+    <br/>
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+    <a class="nav-link active" id="piezas-tab" data-toggle="tab" href="#piezas" role="tab" aria-controls="piezas" aria-selected="false">Piezas</a>
+  </li>
+  <li class="nav-item" role="presentation">
+    <a class="nav-link " id="valores-tab" data-toggle="tab" href="#valores" role="tab" aria-controls="valores" aria-selected="true">Costos de mano de obra</a>
+  </li>
+  <li class="nav-item" role="presentation">
+    <a class="nav-link " id="cuenta-tab" data-toggle="tab" href="#cuenta" role="tab" aria-controls="cuenta" aria-selected="true">Cuenta</a>
+  </li>
+</ul>
+
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show " id="valores" role="tabpanel" aria-labelledby="valores-tab">
+      <br/>
+          <div class="row">
+        <div class="col-md-10 mx-auto">
+            <div class="card">
+                <div class="card-body">
+      {{#each valoresconfig}}
+      <form action="/configuracion" method="POST">
+      <div class="row">
+      <div class="col">
+      <div class="form-group" style="text-align:center">
+        <label>Día de chapa (ARS)</label>
+        <input type="text" name="chapa_dia" class="form-control" value="{{chapa_dia}}" placeholder="$" required>
+      </div></div>     
+        <div class="col">
+      <div class="form-group" style="text-align:center">
+        <label>Paño de pintura (ARS)</label>
+        <input type="text" name="pintura_pano" class="form-control" value="{{pintura_pano}}" placeholder="$" required>
+      </div></div>  
+        <div class="col">
+      <div class="form-group" style="text-align:center">
+        <label>Hora de mecánica (ARS)</label>
+        <input type="text" name="mecanica_hora" class="form-control" value="{{mecanica_hora}}"  placeholder="$"required>
+      </div></div> </div>  
+      <div class="form-group">
+      <button class="btn btn-success btn-block">Actualizar valores</button>
+      </div>
+      </form>  
+      </div></div></div></div>
+      {{/each}}
+
+  </div>
+  <div class="tab-pane fade show active" id="piezas" role="tabpanel" aria-labelledby="piezas-tab">
+    <br />        <div class="col-md-10 mx-auto">   
+
+  <div class="row">
+ <div class="col-md-4"><form>
+<select class="custom-select" id="menu_autopartes" onchange="handleChange()">
+  <option selected>Seleccionar...</option>
+  {{#each autopartes}}
+  <option value="{{nombre_pieza}}"  id="{{nombre_pieza}}">{{nombre_pieza}}</option>
+  {{/each}}
+</select></form>
+</div>
+ <div class="col-md-4">
+   <button class="btn btn-primary" id="editarpieza" disabled="disabled"  data-toggle="modal" data-target="#editarautoparte"><i class="fas fa-edit"></i></button>
+   <button class="btn btn-danger" id ="eliminarpieza" disabled="disabled"  data-toggle="modal" data-target="#eliminarautoparte"><i class="fas fa-trash"></i></button>
+   <button class="btn btn-success"  data-toggle="modal" data-target="#autopartemodal"><i class="fas fa-plus"></i></button>
+
+</div>
+  </div></div></div>
+
+    <div class="tab-pane fade show " id="cuenta" role="tabpanel" aria-labelledby="cuenta-tab">
+      <br/>
+          <div class="row">
+        <div class="col-md-10 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                  {{#each cuenta}}
+      <form action="/actualizarcuenta" method="POST">
+      <div class="col"> 
+            <div class="col">
+      <div class="form-group" style="text-align:center">
+        <label>Usuario</label>
+        <input type="text" name="username" class="form-control" value="{{username}}" readonly>
+      </div></div>  
+        <div class="col">
+      <div class="form-group" style="text-align:center">
+        <label>Contraseña actual</label>
+        <input type="password" name="password" class="form-control" required>
+      </div></div>  
+              <div class="col">
+      <div class="form-group" style="text-align:center">
+        <label>Actualizar contraseña</label>
+        <input type="password" name="newpassword" class="form-control" required>
+      </div></div> 
+      <div class="form-group">
+      <button class="btn btn-success btn-block">Actualizar datos</button>
+      </div>
+      
+      </form>  {{/each}}
+      </div></div></div></div>
+
+  </div>
+</div></div>
+<div class="modal fade" id="autopartemodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <form action="/nuevapieza" method="POST">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Nueva pieza</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="form-group">
+        <input type="text" name="nombre_pieza" class="form-control" placeholder="Pieza" required>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="eliminarautoparte" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <form action="/eliminarpieza" method="POST">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Eliminar pieza</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <p>Está seguro de que desea eliminar la pieza <span id="piezaeliminarspan"></span>?</p>
+        <input id="piezaeliminar" name="piezaeliminar" style="display:none">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="editarautoparte" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <form action="/editarpieza" method="POST">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Editar pieza</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <p>Editar <span id="piezaeditarspan"></span>:</p>
+                <div class="form-group">
+        <input id="piezaeditar" name="piezaeditar"  type="text" class="form-control"  placeholder="Nuevo nombre de pieza">
+        </div>
+        <input id="piezaeditarvieja" name="piezaeditarvieja" style="display:none">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-info">Actualizar</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', async function() {
+    $('#menu_autopartes').select2({
+       theme: 'bootstrap4'
+    });
+  });
+
+
+function handleChange(){
+  document.getElementById('editarpieza').removeAttribute('disabled');
+    document.getElementById('eliminarpieza').removeAttribute('disabled');
+  const optselected = document.getElementById("menu_autopartes").value;
+  document.getElementById("piezaeliminarspan").innerHTML = '"'+optselected+'"';
+  document.getElementById("piezaeliminar").value = optselected;
+    document.getElementById("piezaeditarspan").innerHTML = '"'+optselected+'"';
+  document.getElementById("piezaeditarvieja").value = optselected;
+
+}
+
+</script>

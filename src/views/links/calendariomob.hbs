@@ -1,0 +1,448 @@
+<style>
+ 
+.fc .fc-toolbar-title {
+  font-size: 1.5rem;
+};
+.fc .fc-button{
+    padding:0px;
+    font-size:0.75rem;
+}
+div.fc-view-harness.fc-view-harness-active {
+    height:  650px  !important;
+}
+div.fc-bg-event.fc-event.fc-event-start.fc-event-end.fc-event-past, div.fc-bg-event.fc-event.fc-event-start.fc-event-end.fc-event-future{
+    font-size: 0.8rem;
+}
+
+
+
+* {
+  font-size: xx-small
+}
+
+
+</style>
+<div class="container">
+  <br/>
+  <div style="text-align:center;font-size:1.25rem">
+    <span class="badge badge-warning" style="color:black">Turno asignado</span>    <span style="color:black" class="badge badge-primary">En reparación</span>    <span style="color:black" class="badge badge-success">Orden finalizada</span>    <span class="badge badge-danger" style="color:black">Orden cancelada</span>    <span class="badge" style="color:#5C1BA8;border-color:#5C1BA8;border: solid thin">Turno particular</span>    <span class="badge" style="color:saddlebrown;border-color:yellowgreen;border: solid thin">Sobreturno</span>
+</div>
+    <br/><br/>
+        <div id='calendar'>
+    </div><br/>
+    
+    <br/>
+      <div class="modal fade" id="nuevoturnoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+                  <form id="nuevoturno" method="post" action="/nuevoturnoparticular" enctype="multipart/form-data">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Nuevo turno particular</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+              <h5>Cargar nuevo turno a clientes no presupuestados.<br/><small>Para cargar un turno a un cliente ya cargado, dirigirse al panel de <a href="/ordenes">órdenes de trabajo</a>.</small></h5>
+            <br/>
+            <div class="form-group" style="display: flex; justify-content: space-between">
+              <label for="fecha_nuevoturno" style="font-size: medium">Fecha del turno:</label>
+
+              <input type="date" name="fecha_nuevoturno_i" id="fecha_nuevoturno_i" class="form-control" style="width:70%;font-size: medium" placeholder="Fecha del turno" required
+               onchange="document.getElementById('fecha_nuevoturno_f').min = this.value;">
+            </div>
+             <div class="form-group"  style="display: flex; justify-content: space-between;margin-bottom:0">
+<label for="fecha_nuevoturno" style="font-size: medium">Fecha de entrega:<br/></label>
+                <input type="date" name="fecha_nuevoturno_f" id="fecha_nuevoturno_f" style="width:70%;font-size: medium"  class="form-control" placeholder="Fecha de entrega" >
+ </div><div class="form-check form-check-inline" style="margin-bottom:20px">
+  <input class="form-check-input" type="checkbox" id="fecha_eneldia" name="fecha_eneldia" value="1" onclick="document.getElementById('fecha_nuevoturno_f').toggleAttribute('disabled');document.getElementById('fecha_nuevoturno_f').value=null;document.getElementById('fecha_nuevoturno_f').placeholder='';">
+  <br/><label class="form-check-label" for="particular" style="color: rgb(118,118,118);font-size:medium" >En el día</label>
+</div>
+            <div class="form-group">
+                <input type="text" name="nombre_nuevoturno" id="nombre_nuevoturno" class="form-control" placeholder="Nombre" required style="font-size: medium">
+            </div>
+            <div class="form-group">
+                <input type="text" name="dominio_nuevoturno" id="dominio_nuevoturno" class="form-control" ontouchend="mayus(this);"   placeholder="Dominio (obligatorio)" style="border-color:orangered;font-size: medium"  onchange="verificardominio(this.value)" >
+            </div>
+                        <div class="form-group">
+                <input type="text" name="telefono_nuevoturno" id="telefono_nuevoturno" class="form-control" placeholder="Teléfono" style="font-size: medium">
+            </div>
+
+     <div class="form-group">
+<textarea class="form-control" id="obs_nuevoturno" name="obs_nuevoturno" placeholder="Observación (opcional)" rows="3" style="font-size: medium"></textarea>
+            </div>
+          
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" id="continuarturno" disabled="disabled"  class="btn btn-primary">Continuar</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+      <div class="modal fade" id="detalleturno" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Detalle de turno</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+            <div class="modal-body">
+              <h4><span id="titular_turno"></span></h4>
+                Fecha del turno: <span id="fecha_turno_i"></span> - <span id="fecha_turno_f"></span><br/>
+                Estado: <span id="estado_turno"></span><br/>
+               <span id="observacion_turno">Observación del turno: <span id="observacion_turno_desc"></span></span><br/>
+                
+                <br/>
+                <h5 id="presupuestos">Presupuestos</h5>
+                <div class="col-sm-8">
+  <div class="row" id="presupuesto_0" style="justify-content: flex-start;"></div>
+        <div class="row" style="justify-content: flex-start;" id="presupuesto_A"></div>
+        <div class="row" style="justify-content: flex-start;" id="presupuesto_B"></div>
+        <div class="row" style="justify-content: flex-start;" id="presupuesto_C"></div>
+        <div class="row" style="justify-content: flex-start;" id="presupuesto_D"></div>
+       <div class="row" style="justify-content: flex-start;" id="presupuesto_E"></div>
+</div>
+
+       <br/>
+                <h5 id="ordenes">Ordenes</h5>
+                                <div class="col-sm-8">
+        <div class="row" id="orden_0" style="justify-content: flex-start;"></div>
+        <div class="row" style="justify-content: flex-start;" id="orden_A"></div>
+        <div class="row" style="justify-content: flex-start;" id="orden_B"></div>
+        <div class="row" style="justify-content: flex-start;" id="orden_C"></div>
+        <div class="row" style="justify-content: flex-start;" id="orden_D"></div>
+       <div class="row" style="justify-content: flex-start;" id="orden_E"></div>
+      </div>      </div>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <a class="btn btn-primary" id="modificarturno">Modificar turno</a>
+      </div>
+    </div>
+  </div>
+<
+</div>
+    <div class="modal fade" id="presupuestomodal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Detalle de presupuesto</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="bodypresupuesto">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="modal fade" id="ordenmodal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Detalle de orden de trabajo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="bodyorden">
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card" id="confirmarturno" style="max-width: 18rem;display:none;right:10px;position: fixed;top: 150px;z-index:1000">
+  <div class="card-header">Nuevo turno     <a class="btn btn-danger" style="padding:2px;margin-left:20px;" href="/calendariomob">Cancelar</a>
+</div>
+  <div class="card-body">
+    <h6 class="card-title"><span id="dominioconfirmar"></span> | <span id="nombreconfirmar"></span></h6>
+    <p>Obs: <span id="obsconfirmar"  style="text-size:xx-small"></span></p>
+        <p class="card-text">
+Fecha del turno: <span id="fechaconfirmar_i"></span></br>
+Fecha de entrega: <span id="fechaconfirmar_f"></span>
+    </p>
+    <button class="btn btn-secondary" style="margin-left:20px" onclick="$('#nuevoturnoModal').modal('show');">Editar</button>
+    <button class="btn btn-success" onclick="$('#nuevoturno').submit();">Confirmar</button>
+  </div>
+</div>
+ <script>
+let url = '/calendario.json'
+async function getJson(url) {
+    let response = await fetch(url);
+    let data = await response.json()
+    return data;
+}
+       document.addEventListener('DOMContentLoaded', async function() {
+if ($(window).width() >769) {
+   window.location = '/calendario'
+}        
+        var turnos_db = await getJson(url)
+         var turnos = []
+         if (turnos_db[0] != null){
+            for (i=0; i<turnos_db.length; i++){
+             if (turnos_db[i].extendedProps.particular == 1){
+              var turno_nuevo = {
+                title: turnos_db[i].title,
+                start: turnos_db[i].start,
+                allDay: true,
+                particular: true
+              }
+              } else {
+                var turno_nuevo = {
+                title: turnos_db[i].title,
+                start: turnos_db[i].start,
+                allDay: true,
+                
+              }
+              }
+                turnos.push(turno_nuevo)
+            };}
+          
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          timeZone: 'UTC-3',
+          initialView: 'dayGridMonth',
+           headerToolbar: {
+      center: 'addEventButton'
+    },
+
+    customButtons: {
+      addEventButton: {
+        text: 'Nuevo turno',
+click: function() {
+          $('#nuevoturnoModal').modal('show'); 
+          $('#nuevoturnoModal').on('shown.bs.modal', function (e) {
+          $('#continuarturno').click(function(e) {
+            var turnoviejo = calendar.getEventById('nuevoturno_cal');
+            if (turnoviejo != null){
+              turnoviejo.remove();
+            }
+            var nuevafecha_i = $('#fecha_nuevoturno_i').val();
+            var nuevafechaturno_i = new Date(nuevafecha_i + 'T00:00:00');
+            var nuevafecha_f = $('#fecha_nuevoturno_f').val();
+            var nuevomes_ = Number(String($('#fecha_nuevoturno_f').val()).split('-')[2])+1;
+            var nuevafecha_f_ = String($('#fecha_nuevoturno_f').val()).split('-')[0] + '-' + String($('#fecha_nuevoturno_f').val()).split('-')[1] + '-' + nuevomes_
+            var nuevafechaturno_f = new Date(nuevafecha_f_ + 'T00:00:00');
+             if (!isNaN(nuevafechaturno_i.valueOf())) { 
+            calendar.addEvent({
+              title: $('#nombre_nuevoturno').val() + ' | ' + $('#dominio_nuevoturno').val(),
+              start: nuevafechaturno_i,
+              end: nuevafechaturno_f,
+              color: '#17a2b8',
+              allDay:true,
+              id: 'nuevoturno_cal'
+              
+            });    
+            $('#nuevoturnoModal').modal('hide');
+           $('#nombreconfirmar').html($('#nombre_nuevoturno').val());
+             $('#obsconfirmar').html($('#obs_nuevoturno').val());
+            $('#dominioconfirmar').html($('#dominio_nuevoturno').val());
+             $('#fechaconfirmar_i').html(nuevafecha_i);
+             if (nuevafecha_f == '' || nuevafecha_f == undefined || nuevafecha_f == null){
+                $('#fechaconfirmar_f').html('En el día')} else {
+              $('#fechaconfirmar_f').html(nuevafecha_f)}
+            $('#confirmarturno').show();
+            calendar.gotoDate(nuevafechaturno_i)
+         
+                }  else {
+            alert('Hubo un problema, intente nuevamente.');
+            $('#nuevoturnoModal').modal('hide'); 
+          }
+});
+        })
+      },
+      
+    }},
+          eventClick: function(info) {
+                        if (info.event._def.ui.display != 'background'){
+
+            if ($(window).width() > 768) {
+                          document.getElementById('modificarturno').setAttribute('href', '/modificarturno/'+info.event.extendedProps.dominio)
+} else if ($(window).width() < 768) {
+                          document.getElementById('modificarturno').setAttribute('href', '/modificarturnomob/'+info.event.extendedProps.dominio)
+
+}
+            $('#fecha_turno_i').html((new Date(info.event.start)).toLocaleString('es-AR', { year: 'numeric', month: '2-digit', day: '2-digit' }));
+            
+            $('#fecha_turno_f').html((new Date(info.event.end)).toLocaleString('es-AR', { year: 'numeric', month: '2-digit', day: '2-digit' }));
+
+            $('#estado_turno').html((info.event.extendedProps.estado));
+            if (info.event.extendedProps.observacion != null){
+              $('#observacion_turno_desc').html((info.event.extendedProps.observacion));
+              $('#observacion_turno').show();
+            } else {
+              $('#observacion_turno').hide();
+            }
+            if (info.event.extendedProps.particular == 1){
+              $('#titular_turno').html(info.event.title + '  (Particular)');  
+            } else {$('#titular_turno').html(info.event.title)}
+
+          if (info.event.extendedProps.presupuesto_0 != undefined){
+              if (info.event.extendedProps.observacion_0 != null){
+            $('#presupuesto_0').html('<div class="col-6">'+info.event.extendedProps.presupuesto_0 + '.pdf   </div><div class="col-4"><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#presupuestomodal" href="'+info.event.extendedProps.presupuesto_0+'.pdf" onclick="verpdfpresupuesto(`'+info.event.extendedProps.presupuesto_0+'`,`'+info.event.extendedProps.dominio+'`)"><i class="far fa-file-pdf"></i></button><a tabindex="0" id="observacion0" data-trigger="focus" role="button" class="btn btn-info btn-sm" data-toggle="popover" data-placement="right" title="Observación para el taller" data-content="'+info.event.extendedProps.observacion_0+'"><i class="fas fa-search"></i></a></div><br/>');              
+             $('#observacion0').popover()
+$('.popover-dismiss').popover({
+  trigger: 'focus'
+})
+            } else {
+$('#presupuesto_0').html('<div class="col-6">'+info.event.extendedProps.presupuesto_0 + '.pdf   </div><div class="col-4"><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#presupuestomodal" href="'+info.event.extendedProps.presupuesto_0+'.pdf" onclick="verpdfpresupuesto(`'+info.event.extendedProps.presupuesto_0+'`,`'+info.event.extendedProps.dominio+'`)"><i class="far fa-file-pdf"></i></button></div><br/>');              
+            }
+            }
+            
+            
+             if (info.event.extendedProps.presupuesto_A != undefined){
+                if (info.event.extendedProps.observacion_A != null){
+            $('#presupuesto_A').html('<div class="col-6">'+info.event.extendedProps.presupuesto_A + '.pdf    </div><div class="col-4"><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#presupuestomodal" href="'+info.event.extendedProps.presupuesto_0+'.pdf" onclick="verpdfpresupuesto(`'+info.event.extendedProps.presupuesto_A+'`,`'+info.event.extendedProps.dominio+'`)"><i class="far fa-file-pdf"></i></button><a tabindex="0" id="observacionA" data-trigger="focus" role="button" class="btn btn-info btn-sm" data-toggle="popover" data-placement="right" title="Observación para el taller" data-content="'+info.event.extendedProps.observacion_A+'"><i class="fas fa-search"></i></a></div><br/>');              
+             $('#observacionA').popover()
+$('.popover-dismiss').popover({
+  trigger: 'focus'
+})             
+            } else {
+            $('#presupuesto_A').html('<div class="col-6">'+info.event.extendedProps.presupuesto_A + '.pdf    </div><div class="col-4"><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#presupuestomodal" href="'+info.event.extendedProps.presupuesto_0+'.pdf" onclick="verpdfpresupuesto(`'+info.event.extendedProps.presupuesto_A+'`,`'+info.event.extendedProps.dominio+'`)"><i class="far fa-file-pdf"></i></button></div><br/>');              
+            }
+              }
+              if (info.event.extendedProps.presupuesto_B != undefined){
+
+              if (info.event.extendedProps.observacion_B != null){
+            $('#presupuesto_B').html('<div class="col-6">'+info.event.extendedProps.presupuesto_B + '.pdf    </div><div class="col-4"><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#presupuestomodal" href="'+info.event.extendedProps.presupuesto_0+'.pdf" onclick="verpdfpresupuesto(`'+info.event.extendedProps.presupuesto_B+'`,`'+info.event.extendedProps.dominio+'`)"><i class="far fa-file-pdf"></i></button><a tabindex="0" id="observacionB" data-trigger="focus" role="button" class="btn btn-info btn-sm" data-toggle="popover" data-placement="right" title="Observación para el taller" data-content="'+info.event.extendedProps.observacion_B+'"><i class="fas fa-search"></i></a></div><br/>');              
+             $('#observacionB').popover()
+$('.popover-dismiss').popover({
+  trigger: 'focus'
+})              
+            } else {
+$('#presupuesto_B').html('<div class="col-6">'+info.event.extendedProps.presupuesto_B + '.pdf    </div><div class="col-4"><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#presupuestomodal" href="'+info.event.extendedProps.presupuesto_0+'.pdf" onclick="verpdfpresupuesto(`'+info.event.extendedProps.presupuesto_B+'`,`'+info.event.extendedProps.dominio+'`)"><i class="far fa-file-pdf"></i></button></div><br/>');               
+            } 
+            }if (info.event.extendedProps.presupuesto_C != undefined){
+              var presC = "'"+info.event.extendedProps.presupuesto_C+"'";
+              if (info.event.extendedProps.observacion_C != null){              
+            $('#presupuesto_C').html('<div class="col-6">'+info.event.extendedProps.presupuesto_C + '.pdf    </div><div class="col-4"><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#presupuestomodal" href="'+info.event.extendedProps.presupuesto_0+'.pdf" onclick="verpdfpresupuesto(`'+info.event.extendedProps.presupuesto_C+'`,`'+info.event.extendedProps.dominio+'`)"><i class="far fa-file-pdf"></i></button><a tabindex="0" id="observacionC" data-trigger="focus" role="button" class="btn btn-info btn-sm" data-toggle="popover" data-placement="right" title="Observación para el taller" data-content="'+info.event.extendedProps.observacion_C+'"><i class="fas fa-search"></i></a></div><br/>');              
+             $('#observacionC').popover()
+$('.popover-dismiss').popover({
+  trigger: 'focus'
+})            
+            } else {
+             $('#presupuesto_C').html('<div class="col-6">'+info.event.extendedProps.presupuesto_C + '.pdf    </div><div class="col-4"><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#presupuestomodal" href="'+info.event.extendedProps.presupuesto_0+'.pdf" onclick="verpdfpresupuesto(`'+info.event.extendedProps.presupuesto_C+'`,`'+info.event.extendedProps.dominio+'`)"><i class="far fa-file-pdf"></i></button></div><br/>');                           
+              }
+              }if (info.event.extendedProps.presupuesto_D != undefined){
+
+             if (info.event.extendedProps.observacion_D != null){              
+            $('#presupuesto_D').html('<div class="col-6">'+info.event.extendedProps.presupuesto_D + '.pdf    </div><div class="col-4"><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#presupuestomodal" href="'+info.event.extendedProps.presupuesto_0+'.pdf" onclick="verpdfpresupuesto(`'+info.event.extendedProps.presupuesto_D+'`,`'+info.event.extendedProps.dominio+'`)"><i class="far fa-file-pdf"></i></button><a tabindex="0" id="observacionD" data-trigger="focus" role="button" class="btn btn-info btn-sm" data-toggle="popover" data-placement="right" title="Observación para el taller" data-content="'+info.event.extendedProps.observacion_D+'"><i class="fas fa-search"></i></a></div><br/>');              
+             $('#observacionD').popover()
+$('.popover-dismiss').popover({
+  trigger: 'focus'
+})             
+            } else {
+          $('#presupuesto_D').html('<div class="col-6">'+info.event.extendedProps.presupuesto_D + '.pdf    </div><div class="col-4"><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#presupuestomodal" href="'+info.event.extendedProps.presupuesto_D+'.pdf" onclick="verpdfpresupuesto(`'+info.event.extendedProps.presupuesto_0+'`,`'+info.event.extendedProps.dominio+'`)"><i class="far fa-file-pdf"></i></button></div><br/>');              
+            }
+           } if (info.event.extendedProps.presupuesto_E != undefined){
+
+                           if (info.event.extendedProps.observacion_E != null){              
+            $('#presupuesto_E').html('<div class="col-6">'+info.event.extendedProps.presupuesto_E + '.pdf    </div><div class="col-4"><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#presupuestomodal" href="'+info.event.extendedProps.presupuesto_0+'.pdf" onclick="verpdfpresupuesto(`'+info.event.extendedProps.presupuesto_E+'`,`'+info.event.extendedProps.dominio+'`)"><i class="far fa-file-pdf"></i></button><a tabindex="0" id="observacionE" data-trigger="focus" role="button" class="btn btn-info btn-sm" data-toggle="popover" data-placement="right" title="Observación para el taller" data-content="'+info.event.extendedProps.observacion_E+'"><i class="fas fa-search"></i></a></div><br/>');              
+             $('#observacionE').popover()
+$('.popover-dismiss').popover({
+  trigger: 'focus'
+})           
+            } else {
+            $('#presupuesto_E').html('<div class="col-6">'+info.event.extendedProps.presupuesto_E + '.pdf    </div><div class="col-4"><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#presupuestomodal" href="'+info.event.extendedProps.presupuesto_0+'.pdf" onclick="verpdfpresupuesto(`'+info.event.extendedProps.presupuesto_E+'`,`'+info.event.extendedProps.dominio+'`)"><i class="far fa-file-pdf"></i></button></div><br/>');              
+            }
+            }
+
+             if (info.event.extendedProps.orden_0 != undefined){
+            var orden0 = "'"+info.event.extendedProps.orden_0+"'";
+            $('#orden_0').html('<div class="col-sm-9">'+info.event.extendedProps.orden_0 + '    </div><div class="col-sm-3"><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#ordenmodal" href="'+info.event.extendedProps.orden_0+'" onclick="verpdforden('+orden0+')"><i class="far fa-file-pdf"></i></button></div></div><br/>');              
+            } if (info.event.extendedProps.orden_A != undefined){
+            var ordenA = "'"+info.event.extendedProps.orden_A+"'";
+            $('#orden_A').html('<div class="col-sm-9">'+info.event.extendedProps.orden_A + '    </div><div class="col-sm-3"><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#ordenmodal" href="'+info.event.extendedProps.orden_A+'" onclick="verpdforden('+ordenA+')"><i class="far fa-file-pdf"></i></button></div><br/>');              
+            } if (info.event.extendedProps.orden_B != undefined){
+              var ordenB = "'"+info.event.extendedProps.orden_B+"'";
+            $('#orden_B').html('<div class="col-sm-9">'+info.event.extendedProps.orden_B + '    </div><div class="col-sm-3"><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#ordenmodal" href="'+info.event.extendedProps.orden_B+'" onclick="verpdforden('+ordenB+')"><i class="far fa-file-pdf"></i></button></div><br/>');              
+            } if (info.event.extendedProps.orden_C != undefined){
+              var ordenC = "'"+info.event.extendedProps.orden_C+"'";
+            $('#orden_C').html('<div class="col-sm-9">'+info.event.extendedProps.orden_C + '    </div><div class="col-sm-3"><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#ordenmodal" href="'+info.event.extendedProps.orden_C+'" onclick="verpdforden('+ordenC+')"><i class="far fa-file-pdf"></i></button></div><br/>');              
+            } if (info.event.extendedProps.orden_D != undefined){
+              var ordenD = "'"+info.event.extendedProps.orden_D+"'";
+            $('#orden_D').html('<div class="col-sm-9">'+info.event.extendedProps.orden_D + '    </div><div class="col-sm-3"><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#ordenmodal" href="'+info.event.extendedProps.orden_D+'" onclick="verpdforden('+ordenD+')"><i class="far fa-file-pdf">></i</button></div><br/>');              
+            } if (info.event.extendedProps.orden_E != undefined){
+              var ordenE = "'"+info.event.extendedProps.orden_E+"'";
+            $('#orden_E').html('<div class="col-sm-9">'+info.event.extendedProps.orden_E + '    </div><div class="col-sm-3"><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#ordenmodal" href="'+info.event.extendedProps.orden_E+'" onclick="verpdforden('+ordenE+')"><i class="far fa-file-pdf"></i></button></div><br/>');              
+            }
+            $('#detalleturno').modal('show'); 
+
+          }
+          
+          }
+        
+        });
+calendar.addEventSource('/calendario.json');
+calendar.addEventSource('/feriados.json');
+calendar.addEventSource('/ordenescompletas.json');
+        calendar.setOption('locale', 'es-us');
+        themeSystem: 'bootstrap';
+
+        calendar.render();
+      });
+ $('#detalleturno').on('hidden.bs.modal', function () {
+    $('#presupuesto_0').html('');
+    $('#presupuesto_A').html('');
+    $('#presupuesto_B').html('');
+    $('#presupuesto_C').html('');
+    $('#presupuesto_D').html('');
+    $('#presupuesto_E').html('');
+    $('#orden_0').html('');
+    $('#orden_A').html('');
+    $('#orden_B').html('');
+    $('#orden_C').html('');
+    $('#orden_D').html('');
+    $('#orden_E').html('');
+
+  })
+       $('#presupuestomodal').on('hide.bs.modal', function () {
+    document.getElementById('bodypresupuesto').removeChild(document.getElementById("embedpresupuesto"))
+  })
+    $('#ordenmodal').on('hide.bs.modal', function () {
+    document.getElementById('bodyorden').removeChild(document.getElementById("embedorden"))
+  })
+        function verpdfpresupuesto(t,d){
+    let url = '/pdfpresupuesto/'+d+'/'+t;
+
+    var embedpdf = '<embed width="750" id="embedpresupuesto" height="375" src="'+url+'" type="application/pdf">'
+    document.getElementById('bodypresupuesto').insertAdjacentHTML("beforeend",embedpdf);
+  }
+
+   function verpdforden(string){
+        var srcpdf = 'pdf/ordenes/'+string
+    var embedorden = '<embed width="750" id="embedorden" height="375" src="'+srcpdf+'" type="application/pdf">'
+    document.getElementById('bodyorden').insertAdjacentHTML("beforeend",embedorden);
+  }
+
+  function verificardominio(t) {
+    if (t !== ''){
+      document.getElementById('continuarturno').removeAttribute('disabled');
+    } else {
+      document.getElementById('continuarturno').setAttribute('disabled','disabled');
+    }
+      }
+
+    function mayus(e) {
+    e.value = e.value.toUpperCase();
+}  
+    </script>

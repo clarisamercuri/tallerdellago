@@ -1,0 +1,274 @@
+<style>
+    *{
+        font-size: x-small;
+    }
+</style>
+
+<div class="container">
+    <br />
+    <h4>Nuevo presupuesto</h4>
+    <br />
+    <div class="row">
+        <div class="col-md-12 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <form action="/nuevopresupuesto" method="POST" onsubmit="handleSubmit()">
+                    {{#each valorescliente}}
+                    <div class="row">
+                    <div class="col">
+                    <h4>Datos del cliente</h4>
+                    
+                        <div class="form-group">
+                            <input type="text" name="nombre" class="form-control" placeholder="Nombre completo" value="{{nombre}}" autofocus required>
+                        </div>
+                        <div class="form-group">
+                            <div class="row" style="justify-content: space-around;">
+                            <input type="text" name="compania" id="compania" class="form-control" style="width:80px" placeholder="Compañía">
+                            <div class="form-check form-check-inline">
+  <input class="form-check-input" type="checkbox" id="particular" name="particular" value="1" onclick="document.getElementById('compania').toggleAttribute('disabled')">
+  <label class="form-check-label" for="particular" style="color: rgb(118,118,118);" >Particular</label>
+</div>
+</div>
+                        </div>
+                         <div class="form-group">
+                            <input type="text" name="siniestro" value="{{siniestro}}" class="form-control" placeholder="Siniestro">
+                        </div>
+                      <div class="form-group">
+                            <input type="phone" name="telefono" class="form-control" value="{{telefono}}" placeholder="Teléfono">
+                        </div>
+                        </div>
+                         <div class="col">
+                    <h4>Datos del vehículo</h4>
+                      <div class="form-group">
+                            <input type="text" name="marca" class="form-control" value="{{marca}}" placeholder="Marca" readonly>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="modelo" class="form-control" value="{{modelo}}" placeholder="Modelo">
+                        </div>
+                      <div class="form-group">
+                            <input type="text" name="dominio" class="form-control" value="{{dominio}}" placeholder="Dominio" readonly>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="color" class="form-control" value="{{color}}" placeholder="Color">
+                        </div>
+                        </div>
+
+                        </div>{{/each}}
+                        <br />
+                        <div class="row">
+                        <div class="col">
+
+                        <h4>Detalle de presupuesto</h4>
+                        <br/>
+<div class="row">
+<div class="col">
+    {{#each valoresconfig}}
+<p><b>Chapa (día x ARS):</b> $<span id="chapa_dia" name="chapa_dia">{{chapa_dia}}</span></p>
+</div>
+<div class="col">
+<p><b>Pintura (paño x ARS):</b> $<span name="pintura_pano" id="pintura_pano">{{pintura_pano}}</span></p>
+</div>
+<div class="col">
+<p><b>Mecánica (hora x ARS):</b> $<span name="mecanica_hora" id="mecanica_hora" >{{mecanica_hora}}</span></p>
+</div>
+{{/each}}
+</div>
+<br/>
+
+<h5>A reparar</h5>
+<div id="piezas_reparar">
+
+</div>
+<button class="btn btn-primary" onclick="addPart()"><i class="fa fa-plus medium"></i> Agregar pieza</button>
+<br /><br /><br />
+
+<h5>A cambiar</h5>
+<div id="piezas_cambiar">
+
+</div>
+       <button class="btn btn-primary" onclick="addPart2()"><i class="fa fa-plus medium"></i> Agregar pieza</button>
+                <br /><br />
+                
+<div class="form-group">
+<h5 >Franquicia <small>(opcional)</small></h5> 
+<input type="text" name="franquicia" id="franquicia" placeholder="$" class="form-control">
+                </div>
+<div class="form-group">
+<h5 >Observación para el taller <small>(opcional)</small></h5> 
+<input type="text" name="observacion" id="observacion" class="form-control">
+                </div>                
+<br />
+<h4>Total: $<span name="total" type="input" id="total" style="font-size:1em"></span>.-</h4>
+<br/>
+<input name="total_presupuesto" style="display:none" id="total_presupuesto">
+                        <div class="form-group">
+                            <button class="btn btn-success btn-block" id="btnsubmit">
+                                Confirmar presupuesto
+                            </button>
+                        </div>
+                         <div class="form-group">
+                            <a class="btn btn-secondary btn-block" href="/ordenes">
+                                Regresar al listado
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+    var i= 0;
+    var j=0;
+   
+       
+  document.addEventListener('DOMContentLoaded', async function() {
+      document.getElementById('total_presupuesto').value = 0;
+   document.getElementById('total').innerHTML = Number(0);
+  });
+       function handleSubmit(){
+        document.getElementById("btnsubmit").setAttribute("disabled","disabled");
+        document.getElementById("btnsubmit").innerHTML="<div class='spinner-border spinner-border-sm' role='status'></div>";
+        setTimeout(()=> {document.getElementById("btnsubmit").innerHTML="<i class='fas fa-check'></i>";}, 6000)
+       }
+function handleChange(){
+    event.preventDefault();
+    let k=0
+    let l=0
+    let total = 0
+    let total_chapa_r = 0
+    let total_pintura_r = 0
+    let total_mecanica_r = 0
+    let total_repuesto_r = 0
+    let total_chapa_c = 0
+    let total_pintura_c = 0
+    let total_mecanica_c = 0
+    let total_repuesto_c = 0
+    for (k=0; k < 50; k++) {
+        if ((document.getElementById("piezar"+k+""))!=null  && (document.getElementById("piezar"+k+""))!= ''){
+        total_chapa_r = total_chapa_r + (Number(document.getElementById("chapa"+k+"").value))*(Number(document.getElementById("chapa_dia").innerHTML))
+        total_pintura_r = total_pintura_r + (Number(document.getElementById("pintura"+k+"").value))*(Number(document.getElementById("pintura_pano").innerHTML))
+        total_mecanica_r = total_mecanica_r + (Number(document.getElementById("mecanica"+k+"").value ))*(Number(document.getElementById("mecanica_hora").innerHTML))
+        total_repuesto_r = total_repuesto_r + (Number(document.getElementById("repuesto"+k+"").value ))
+        }
+}
+for (l=0; l < 50; l++) {
+
+            if ((document.getElementById("piezac"+l+""))!=null  && (document.getElementById("piezac"+l+""))!= ''){
+  total_chapa_c = total_chapa_c + (Number(document.getElementById("chapa_c"+l+"").value ))*(Number(document.getElementById("chapa_dia").innerHTML));
+        total_pintura_c = total_pintura_c + (Number(document.getElementById("pintura_c"+l+"").value ))*(Number(document.getElementById("pintura_pano").innerHTML))
+        total_mecanica_c = total_mecanica_c + (Number(document.getElementById("mecanica_c"+l+"").value ))*(Number(document.getElementById("mecanica_hora").innerHTML))
+        total_repuesto_c = total_repuesto_c + (Number(document.getElementById("repuesto_c"+l+"").value ))
+}
+}
+    
+total = total_chapa_r + total_pintura_r + total_mecanica_r + total_repuesto_r + total_chapa_c + total_pintura_c + total_mecanica_c + total_repuesto_c 
+document.getElementById('total').innerHTML = total;
+document.getElementById('total_presupuesto').value = total;
+
+}
+
+function addPart(){
+    document.getElementById("piezas_reparar").insertAdjacentHTML("beforeend",
+                 '<div class="form-group" id="r'+i+'">'+
+' <div class="row">'+
+'<div class="col-sm-3">'+
+'<label>Pieza</label>'+
+'<select class="custom-select" name="pieza_reparar" id="piezar'+i+'" required onchange="handleChange()">'+
+'<option selected disabled>Seleccionar...</option>'+
+' {{#each piezas}}'+
+'<option value="{{nombre_pieza}}"  id="{{nombre_pieza}}">{{nombre_pieza}}</option>'+
+'{{/each}}'+
+'</select>'+
+'</div>'+
+'<div class="col-4">'+
+'<label>Chapa (días)</label>'+
+'<input type="text" name="chapa_reparar" id="chapa'+i+'" placeholder="Ej. 0.2" pattern="[0-9]+([.]+[0-9])?" class="form-control" onchange="handleChange()">'+
+'</div>'+
+'<div class="col-4">'+
+'<label>Pintura (paños)</label>'+
+'<input type="text" name="pintura_reparar" id="pintura'+i+'"  placeholder="Ej. 0.2" class="form-control" onchange="handleChange()">'+
+'</div>'+    
+'<div class="col-4">'+
+'<label>Mecánica (horas)</label>'+
+'<input type="text" name="mecanica_reparar" id="mecanica'+i+'" class="form-control" onchange="handleChange()" pattern="[0-9]+([.]+[0-9])?">'+
+'</div>'+
+'<div class="col-sm-2">'+
+'<label>Varios (ARS)</label>'+
+'<input type="text" name="repuesto_reparar" id="repuesto'+i+'" class="form-control" onchange="handleChange()">'+
+'</div>'+
+'<div class="col-sm-1">'+
+'<br />'+
+'<button class="btn btn-danger form-control" onclick="deletePart(r'+i+',`piezas_reparar`)"><i class="fa fa-trash"></i></button>'+
+'</div>'+
+'</div>'+
+'<br/>'+
+'</div>'
+                 
+                 
+                  );
+                   $(".custom-select").select2({
+       theme: 'bootstrap4',
+       tags:true
+    });
+    i=i+1;
+    event.preventDefault();
+}
+function addPart2(){
+     document.getElementById("piezas_cambiar").insertAdjacentHTML("beforeend",
+                 '<div class="form-group" id="c'+j+'">'+
+' <div class="row">'+
+'<div class="col-sm-3">'+
+'<label>Pieza</label>'+
+'<select class="custom-select" name="pieza_cambiar" id="piezac'+j+'" required onchange="handleChange()">'+
+'<option selected disabled>Seleccionar...</option>'+
+' {{#each piezas}}'+
+'<option value="{{nombre_pieza}}"  id="{{nombre_pieza}}">{{nombre_pieza}}</option>'+
+'{{/each}}'+
+'</select>'+
+'</div>'+
+'<div class="col-4">'+
+'<label>Chapa (días)</label>'+
+'<input type="text" name="chapa_cambiar" id="chapa_c'+j+'" placeholder="Ej. 0.2"  class="form-control" onchange="handleChange()" pattern="[0-9]+([.]+[0-9])?">'+
+'</div>'+
+'<div class="col-4">'+
+'<label>Pintura (paños)</label>'+
+'<input type="text" name="pintura_cambiar" id="pintura_c'+j+'"  placeholder="Ej. 0.2" class="form-control" onchange="handleChange()" >'+
+'</div>'+    
+'<div class="col-4">'+
+'<label>Mecánica (horas)</label>'+
+'<input type="text" name="mecanica_cambiar" id="mecanica_c'+j+'" class="form-control" onchange="handleChange()" pattern="[0-9]+([.]+[0-9])?">'+
+'</div>'+
+'<div class="col-sm-2">'+
+'<label>Valor repuesto (ARS)</label>'+
+'<input type="text" name="repuesto_cambiar" id="repuesto_c'+j+'" class="form-control" onchange="handleChange()">'+
+'</div>'+
+'<div class="col-sm-1">'+
+'<br />'+
+'<button class="btn btn-danger form-control" onclick="deletePart(`c'+j+'`,`piezas_cambiar`)"><i class="fa fa-trash"></i></button>'+
+'</div>'+
+'</div>'+
+'<br/>'+
+'</div>'
+                  );$(".custom-select").select2({
+       theme: 'bootstrap4',
+       tags:true
+    });
+                 j=j+1;
+    event.preventDefault();
+}
+
+function deletePart(y, string){
+    document.getElementById(y.id).remove();
+    
+handleChange();
+  
+}
+
+
+
+
+</script>

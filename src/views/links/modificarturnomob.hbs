@@ -1,0 +1,200 @@
+
+ 
+ <div class="container">
+     <br/>
+ <div class="row">
+        <div class="col-md-12 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <h3>Detalle de turno</h3>
+                    <br/>
+     
+       <div class="row">
+
+      <div class="col-md-4">
+                          <h4>Datos principales</h4>
+
+                    {{#each datospresupuesto}}
+        <h5>Nombre: <small>{{nombre}}</small></h5>
+        <h5>Teléfono: <small>{{telefono}}</small></h5>
+        <h5>Dominio: <small>{{dominio}}</small></h5>
+        <h5>Marca/Modelo: <small>{{marca}}/{{modelo}}</small></h5>
+        <h5>Color: <small>{{color}}</small></h5>
+        {{/each}}
+        {{#each turno}}<form id="modificarturno" >
+                <div class="row" style="padding-left: 15px;padding-right: 15px;justify-content:space-between">
+
+        <label style="font-size: 1.25rem">Estado: </label>
+        <select class="custom-select" id="{{estado}}"style="width:50%;height: 30px; padding: 0px 0px 0px 10px;margin-left: 10px" name="estado_nuevoturno">
+  <option disabled>Estado</option>
+  <option value="Turno otorgado" id="otorgado">Turno otorgado</option>
+  <option value="En reparación" id="reparacion">En reparación</option>
+  <option value="Finalizada" id="finalizada">Finalizada</option>
+  <option value="Cancelada" id="cancelada">Cancelada</option>
+
+
+</select>
+      </div>
+
+        <div class="row" style="padding-left: 15px;padding-right: 15px;justify-content:space-between">
+        <label style="font-size: 1.25rem">Turno:  </label><input type="text" defaultValue="{{fecha_turno_i}}" onchange="document.getElementById('fecha_nuevoturno_f').min=this.value;" placeholder="{{fecha_turno_i}}" style="width:30%;height: 30px; padding: 0px 0px 0px 10px;margin-left: 10px" name="fecha_nuevoturno_i"  value="{{fecha_turno_i}}" id="fecha_nuevoturno_i" class="form-control" onmouseover="type='date'" onmouseout="type='text'">
+         <p>a</p><input type="text" defaultValue="{{fecha_turno_f}}" min="{{fecha_turno_i}}" placeholder="{{fecha_turno_f}}" style="width:30%;height: 30px; padding: 0px 0px 0px 10px;margin-left: 1px" name="fecha_nuevoturno_f" id="fecha_nuevoturno_f" value="{{fecha_turno_f}}" class="form-control" onmouseover="type='date'" onmouseout="type='text'">
+      </div>
+      </form>
+      {{/each}}
+      </div>    
+            <div class="col-md-4">
+                                 <h4>Presupuestos</h4>
+                                 
+            {{#each turno}}
+                {{#if presupuesto_0}}
+                <div class="row" style="justify-content: flex-start;">
+                <div class='col-8'>{{presupuesto_0}}</div>  <div class='col-4'>
+                  <a class="btn btn-danger btn-sm" href="/pdfpresupuestomob/{{dominio}}/{{presupuesto_0}}"><i class="far fa-file-pdf"></i></a>  
+
+                  <a class="btn btn-danger btn-sm" href="/eliminarpresupuesto/{{dominio}}/presupuesto_0/{{presupuesto_0}}"><i class="fa fa-trash"></i></a>
+                </div>
+                              {{#if observacion_0}}
+                  <p style="font-size: small;padding-left:15px"><b>Observación para el taller:</b> {{observacion_0}}</p>
+                  {{/if}}    
+                </div>{{/if}}
+                 {{#if presupuesto_A}}
+                 <div class="row" style="justify-content: flex-start;">
+                <div class='col-8'>{{presupuesto_A}}</div>  <div class='col-4'>
+                  <a class="btn btn-danger btn-sm" href="/pdfpresupuestomob/{{dominio}}/{{presupuesto_A}}"><i class="far fa-file-pdf"></i></a>  
+                 </div>
+                                               {{#if observacion_A}}
+                  <p style="font-size: small;padding-left:15px"><b>Observación para el taller:</b> {{observacion_A}}</p>
+                  {{/if}}
+                 </div>{{/if}} {{#if presupuesto_B}}
+                 <div class="row" style="justify-content: flex-start;">
+                <div class='col-8'>{{presupuesto_B}} </div> <div class='col-4'>
+                  <a class="btn btn-danger btn-sm" href="/pdfpresupuestomob/{{dominio}}/{{presupuesto_B}}"><i class="far fa-file-pdf"></i></a>  
+                 </div>
+                                               {{#if observacion_B}}
+                  <p style="font-size: small;padding-left:15px"><b>Observación para el taller:</b> {{observacion_B}}</p>
+                  {{/if}}
+                 </div>{{/if}} {{#if presupuesto_C}}
+                  <div class="row" style="justify-content: flex-start;">
+                <div class='col-8'>{{presupuesto_C}} </div> <div class='col-4'>
+                  <a class="btn btn-danger btn-sm" href="/pdfpresupuestomob/{{dominio}}/{{presupuesto_C}}"><i class="far fa-file-pdf"></i></a>  
+                </div>
+                                              {{#if observacion_C}}
+                  <p style="font-size: small;padding-left:15px"><b>Observación para el taller:</b> {{observacion_C}}</p>
+                  {{/if}}
+                </div>{{/if}} {{#if presupuesto_D}}
+                 <div class="row" style="justify-content: flex-start;">
+                <div class='col-8'>{{presupuesto_D}}</div>  <div class='col-4'>
+                  <a class="btn btn-danger btn-sm" href="/pdfpresupuestomob/{{dominio}}/{{presupuesto_D}}"><i class="far fa-file-pdf"></i></a>  
+                </div>
+                                              {{#if observacion_D}}
+                  <p style="font-size: small;padding-left:15px"><b>Observación para el taller:</b> {{observacion_D}}</p>
+                  {{/if}}
+                </div> {{/if}} {{#if presupuesto_E}}
+                 <div class="row" style="justify-content: flex-start;">
+                <div class='col-8'>{{presupuesto_E}}</div>  <div class='col-4'>
+                  <a class="btn btn-danger btn-sm" href="/pdfpresupuestomob/{{dominio}}/{{presupuesto_E}}"><i class="far fa-file-pdf"></i></a>  
+                 </div>
+                                               {{#if observacion_E}}
+                  <p style="font-size: small;padding-left:15px"><b>Observación para el taller:</b> {{observacion_E}}</p>
+                  {{/if}}
+                 </div>{{/if}}
+                {{/each}}
+                
+</div>    
+<br /><br/>
+<div class="col-md-4">
+      
+                <h4>Órdenes de trabajo</h4>
+{{#each turno}}                 {{#if orden_0}}
+                <div class="row" style="justify-content: flex-start;">
+                <div class='col-8'>{{orden_0}}</div> <div class='col-4'><a class="btn btn-danger btn-sm" href="../pdf/ordenes/{{orden_0}}" download="{{orden_0}}"><i class="far fa-file-pdf"></i></a>  <a class="btn btn-danger btn-sm" href="/eliminarordentrabajo/{{dominio}}/orden_0/{{orden_0}}"><i class="fa fa-trash"></i></a>
+                </div></div>{{/if}}
+                                 {{#if orden_A}}
+                                                 <div class="row" style="justify-content: flex-start;">
+
+                <div class='col-8'>{{orden_A}}</div> <div class='col-4'><a class="btn btn-danger btn-sm" href="../pdf/ordenes/{{orden_A}}" download="{{orden_A}}"><i class="far fa-file-pdf"></i></a>  <a class="btn btn-danger btn-sm" href="/eliminarordentrabajo/{{dominio}}/orden_A"><i class="fa fa-trash"></i></a>
+                </div></div>{{/if}}                 {{#if orden_B}}
+                                <div class="row" style="justify-content: flex-start;">
+
+                <div class='col-8'>{{orden_B}}</div> <div class='col-4'><a class="btn btn-danger btn-sm" href="../pdf/ordenes/{{orden_B}}" download="{{orden_B}}"><i class="far fa-file-pdf"></i></a>  <a class="btn btn-danger btn-sm" href="/eliminarordentrabajo/{{dominio}}/orden_B"><i class="fa fa-trash"></i></a>
+                </div></div>{{/if}}                 {{#if orden_C}}
+                                <div class="row" style="justify-content: flex-start;">
+
+                <div class='col-8'>{{orden_C}}</div> <div class='col-4'><a class="btn btn-danger btn-sm" href="../pdf/ordenes/{{orden_C}}" download="{{orden_C}}"><i class="far fa-file-pdf"></i></a>  <a class="btn btn-danger btn-sm" href="/eliminarordentrabajo/{{dominio}}/orden_C"><i class="fa fa-trash"></i></a>
+                </div></div>{{/if}}                 {{#if orden_D}}
+                                <div class="row" style="justify-content: flex-start;">
+
+                <div class='col-8'>{{orden_D}}</div> <div class='col-4'><a class="btn btn-danger btn-sm" href="../pdf/ordenes/{{orden_D}}" download="{{orden_D}}"><i class="far fa-file-pdf"></i></a>  <a class="btn btn-danger btn-sm" href="/eliminarordentrabajo/{{dominio}}/orden_D"><i class="fa fa-trash"></i></a>
+                </div></div>{{/if}}                 {{#if orden_E}}
+                                <div class="row" style="justify-content: flex-start;">
+
+                <div class='col-8'>{{orden_E}}</div> <div class='col-4'><a class="btn btn-danger btn-sm" href="../pdf/ordenes/{{orden_E}}" download="{{orden_E}}"><i class="far fa-file-pdf"></i></a>  <a class="btn btn-danger btn-sm" href="/eliminarordentrabajo/{{dominio}}/orden_E"><i class="fa fa-trash"></i></a>
+                </div></div>{{/if}}
+</div>    
+
+</div> <br/>
+      <div class="form-group">
+      <button class="btn btn-success btn-block" onclick="subirform('actualizar','{{dominio}}')">Actualizar turno</button>
+      </div>
+              <div class="form-group">
+                
+      <button class="btn btn-danger btn-block" onclick="subirform('eliminar','{{dominio}}')">Eliminar turno</button>
+     
+      </div>
+                                  <div class="form-group"><a class="btn btn-secondary btn-block" href="/calendario">
+                                Regresar al calendario
+                            </a></div>
+      {{/each}}
+      </div></div></div></div></div>
+
+
+
+
+      <script>
+function subirform(string, dominio){
+  if (string == 'actualizar'){
+    document.getElementById('modificarturno').setAttribute('action','/actualizarturno/'+dominio)
+    document.getElementById('modificarturno').setAttribute('method','POST')
+    document.getElementById('modificarturno').submit();
+  }
+   else if (string == 'eliminar'){
+    document.getElementById('modificarturno').setAttribute('action','/eliminarturno/'+dominio)
+    document.getElementById('modificarturno').setAttribute('method','POST')
+    document.getElementById('modificarturno').submit();
+  }
+     else if (string == 'nuevaorden'){
+    document.getElementById('nuevaorden').setAttribute('action','/nuevaordenturno/'+dominio)
+    document.getElementById('nuevaorden').setAttribute('method','POST')
+    document.getElementById('nuevaorden').submit();
+  }
+}
+var estadoactual= document.getElementsByName('estado_nuevoturno')
+if (estadoactual[0].id == "Turno otorgado"){
+  document.getElementById("otorgado").setAttribute('selected','selected')
+} else if (estadoactual[0].id == "Presupuestada"){
+    document.getElementById("presupuestada").setAttribute('selected','selected')
+} else if (estadoactual[0].id == "En reparación"){
+    document.getElementById("reparacion").setAttribute('selected','selected')
+} else if (estadoactual[0].id == "Finalizada"){
+    document.getElementById("finalizada").setAttribute('selected','selected')}     
+
+  $('#presupuestomodal').on('hide.bs.modal', function () {
+    document.getElementById('bodypresupuesto').removeChild(document.getElementById("embedpresupuesto"))
+  })
+    $('#ordenmodal').on('hide.bs.modal', function () {
+    document.getElementById('bodyorden').removeChild(document.getElementById("embedorden"))
+  })
+
+ function verpdfpresupuesto(t,d){
+ let url = '/pdfpresupuesto/'+d+'/'+t;
+
+    var embedpdf = '<embed width="750" id="embedpresupuesto" height="375" src="'+url+'" type="application/pdf">'
+    document.getElementById('bodypresupuesto').insertAdjacentHTML("beforeend",embedpdf);
+      }
+    function verpdforden(x){
+    document.getElementById('pdforden').setAttribute('src', '../pdf/ordenes/'+x)
+
+
+  }
+      </script>
